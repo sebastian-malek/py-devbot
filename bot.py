@@ -1,4 +1,6 @@
 import logging
+import discord
+import config
 
 
 logger = logging.getLogger(__name__)
