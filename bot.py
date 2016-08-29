@@ -11,14 +11,16 @@ class Bot(object):
     def start(cls):
         logging.info('Starting Bot...')
 
+        cls.client = discord.Client()
+
         cls.loop = asyncio.get_event_loop()
         cls.loop.run_until_complete(cls.run())
 
     @classmethod
     def stop(cls):
-        pass
+        cls.loop.run_until_complete(cls.client.logout())
 
     @classmethod
     @asyncio.coroutine
     def run(cls):
-        pass
+        cls.client.start(config.TOKEN)
