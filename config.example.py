@@ -1,11 +1,25 @@
-HOST = '0.0.0.0'
+SERVER_HOST = '0.0.0.0'
 
-PORT = 8888
+SERVER_PORT = 8888
 
-TOKEN = ''
+DISCORD_TOKEN = ''
 
-REPOSITORIES = {
-    'sebastian-malek/devbot': [
-        00000000000000000
-    ]
-}
+DISCORD_CHANNEL = ''
+
+GITHUB_URL = 'https://github.com'
+
+GITHUB_REPOSITORIES = [
+    'example-project/example'
+]
+
+GITLAB_URL = 'https://git.example.org'
+
+GITLAB_REPOSITORIES = [
+    'example-project/example'
+]
+
+JENKINS_URL = 'https://ci.example.org'
+
+JENKINS_PROJECTS = [
+    'example'
+]

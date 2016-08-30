@@ -6,10 +6,10 @@ import config
 
 logger = logging.getLogger(__name__)
 
-class Bot(object):
+class Client(object):
     @classmethod
     def start(cls):
-        logging.info('Starting Bot...')
+        logging.info('Starting Client...')
 
         cls.client = discord.Client()
 
@@ -23,4 +23,13 @@ class Bot(object):
     @classmethod
     @asyncio.coroutine
     def run(cls):
-        cls.client.start(config.TOKEN)
+        token = config.DISCORD_TOKEN
+
+        cls.client.start(token)
+
+    @classmethod
+    @asyncio.coroutine
+    def send_message(cls, message):
+        channel = config.DISCORD_CHANNEL
+
+        yield from cls.client.send_message(channel, message)
