@@ -23,7 +23,7 @@ class Client(object):
     @classmethod
     @asyncio.coroutine
     def run(cls):
-        cls.client.start(config.DISCORD_TOKEN)
+        yield from cls.client.start(config.DISCORD_TOKEN)
 
     @classmethod
     @asyncio.coroutine
