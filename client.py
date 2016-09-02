@@ -23,13 +23,9 @@ class Client(object):
     @classmethod
     @asyncio.coroutine
     def run(cls):
-        token = config.DISCORD_TOKEN
-
-        cls.client.start(token)
+        cls.client.start(config.DISCORD_TOKEN)
 
     @classmethod
     @asyncio.coroutine
     def send_message(cls, message):
-        channel = config.DISCORD_CHANNEL
-
-        yield from cls.client.send_message(channel, message)
+        yield from cls.client.send_message(config.DISCORD_CHANNEL, message)
