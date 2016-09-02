@@ -5,7 +5,7 @@ from client import Client
 
 
 def main():
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=logging.INFO)
     logging.info('Starting DevBot...')
 
     Client.start()
