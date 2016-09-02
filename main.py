@@ -8,8 +8,8 @@ def main():
     logging.basicConfig(level=logging.INFO)
     logging.info('Starting DevBot...')
 
-    Client.start()
     Server.start()
+    Client.start()
 
     loop = asyncio.get_event_loop()
 

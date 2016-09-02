@@ -10,11 +10,13 @@ logger = logging.getLogger(__name__)
 class Server(object):
     @classmethod
     def start(cls):
-        logging.info('Starting Server...')
+        logger.info('Starting Server...')
 
         cls.app = web.Application()
+
         cls.app.router.add_route('post', '/github', cls.handle_github)
         cls.app.router.add_route('post', '/gitlab', cls.handle_gitlab)
+
         cls.app.router.add_route('post', '/jenkins', cls.handle_jenkins)
 
         cls.loop = asyncio.get_event_loop()
@@ -22,6 +24,8 @@ class Server(object):
 
     @classmethod
     def stop(cls):
+        logger.info('Stopping Server...')
+
         cls.server.close()
         cls.loop.run_until_complete(cls.server.wait_closed())
 
@@ -41,39 +45,60 @@ class Server(object):
     @classmethod
     @asyncio.coroutine
     def handle_github(cls, request):
-        repositories = config.GITHUB_REPOSITORIES
+        data = yield from request.json()
+        repository_name = data['repository']['full_name']
 
-        if not repository in repositories:
+        if not repository_name in config.GITHUB_REPOSITORIES:
             logger.warning('Repository not found')
-            return
+            return web.Response()
 
-        text = 'Hello world'
-        return web.Response(body=text.encode('utf-8'))
+        branch = data['ref'].split('/')[2]
+        commits = data['commits']
+
+        yield from Client.send_message(
+            '[**github**] {} commit(s) pushed to {} ({})'
+            .format(len(commits), repository_name, branch)
+        )
+
+        for commit in commits:
+            message = commit['message']
+            author_name = commit['author']['name']
+            commit_id = commit['id'][:7]
+
+            yield from Client.send_message('{} {} {}'.format(commit_id, author_name, message))
+
+        return web.Response()
 
     @classmethod
     @asyncio.coroutine
     def handle_gitlab(cls, request):
-        repositories = config.GITLAB_REPOSITORIES
-
-        if not repository in repositories:
+        if not repository_name in config.GITLAB_REPOSITORIES:
             logger.warning('Repository not found')
             return
 
-        text = 'Hello world'
-        return web.Response(body=text.encode('utf-8'))
+        return web.Response()
 
     @classmethod
     @asyncio.coroutine
     def handle_jenkins(cls, request):
-        projects = config.JENKINS_PROJECTS
+        data = yield from request.json()
+        project_name = data['name']
 
-        if not project in projects:
+        if not project_name in config.JENKINS_PROJECTS:
             logger.warning('Project not found')
-            return
+            return web.Response()
 
-        message = 'Jenkins build completed successfully.'
+        build_status = data['build']['status']
+        build_number = data['build']['number']
 
-        yield from Client.send_message(message)
+        status = 'failed :heavy_multiplication_x:'
 
-        text = 'Hello world'
-        return web.Response(body=text.encode('utf-8'))
+        if build_status == 'SUCCESS':
+            status = 'completed successfully :heavy_check_mark:'
+
+        yield from Client.send_message(
+            '[**jenkins**] {}: build {} {}'
+            .format(project_name, build_number, status)
+        )
+
+        return web.Response()
