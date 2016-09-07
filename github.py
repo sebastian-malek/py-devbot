@@ -6,29 +6,29 @@ from aiohttp import web
 logger = logging.getLogger(__name__)
 
 class GitHub(object):
-	@classmethod
-	@asyncio.coroutine
-	def handle_request(cls, request):
-		event = request.headers.get('X-GitHub-Event', None)
+    @classmethod
+    @asyncio.coroutine
+    def handle_request(cls, request):
+        event = request.headers.get('X-GitHub-Event', None)
 
-		result = web.Response()
+        result = web.Response()
 
-		if event == 'ping':
-			result = yield from on_ping(request)
-		elif event == 'push':
-			result = yield from on_push(request)
+        if event == 'ping':
+            result = yield from on_ping(request)
+        elif event == 'push':
+            result = yield from on_push(request)
 
-		return result
+        return result
 
-	@classmethod
+    @classmethod
     @asyncio.coroutine
     def on_ping(cls, request):
-    	return web.Response()
+        return web.Response()
 
     @classmethod
     @asyncio.coroutine
     def on_push(cls, request):
-    	data = yield from request.json()
+        data = yield from request.json()
 
         repository_name = data['repository']['full_name']
 

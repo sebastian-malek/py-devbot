@@ -6,9 +6,9 @@ from aiohttp import web
 logger = logging.getLogger(__name__)
 
 class Jenkins(object):
-	@classmethod
-	@asyncio.coroutine
-	def handle_request(cls, request):
+    @classmethod
+    @asyncio.coroutine
+    def handle_request(cls, request):
         data = yield from request.json()
         project_name = data['name']
 

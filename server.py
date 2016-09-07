@@ -39,8 +39,8 @@ class Server(object):
         cls.handler = cls.app.make_handler()
 
         cls.server = yield from cls.loop.create_server(cls.handler,
-                                                       config.SERVER_HOST,
-                                                       config.SERVER_PORT)
+                                                       config.HOST,
+                                                       config.PORT)
 
     @classmethod
     @asyncio.coroutine
