@@ -14,9 +14,9 @@ class GitHub(object):
         result = web.Response()
 
         if event == 'ping':
-            result = yield from on_ping(request)
+            result = yield from cls.on_ping(request)
         elif event == 'push':
-            result = yield from on_push(request)
+            result = yield from cls.on_push(request)
 
         return result
 

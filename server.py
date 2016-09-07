@@ -2,8 +2,8 @@ import logging
 import asyncio
 from aiohttp import web
 import config
-import jenkins
-import github
+from jenkins import Jenkins
+from github import GitHub
 
 
 logger = logging.getLogger(__name__)
@@ -15,9 +15,9 @@ class Server(object):
 
         cls.app = web.Application()
 
-        cls.app.router.add_route('post', '/github', github.handle_request)
+        cls.app.router.add_route('post', '/github', GitHub.handle_request)
         cls.app.router.add_route('post', '/gitlab', cls.handle_gitlab)
-        cls.app.router.add_route('post', '/jenkins', jenkins.handle_request)
+        cls.app.router.add_route('post', '/jenkins', Jenkins.handle_request)
 
         cls.loop = asyncio.get_event_loop()
         cls.loop.run_until_complete(cls.run())
